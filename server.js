@@ -15,7 +15,6 @@ const server = net.createServer((client) => {
   client.setEncoding('utf8');
 
   client.on('data', (data) => {
-    console.log(data);
     
     if(data === clientString) {
       client.id = Date.now() + seed++;
@@ -33,3 +32,7 @@ const server = net.createServer((client) => {
 server.listen(port, () => {
   console.log(`Server listening on localhost:${port}`);
 });
+
+const generateAnswer = () => {
+  return Math.round(Math.random());
+}
