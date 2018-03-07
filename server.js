@@ -19,9 +19,9 @@ const server = net.createServer((client) => {
     if(data === clientString) {
       client.id = Date.now() + seed++;
       client.write(good);
+
     } else {
-      client.write(bad);
-      client.destroy();
+      
     }
 
   });
@@ -32,6 +32,10 @@ const server = net.createServer((client) => {
 server.listen(port, () => {
   console.log(`Server listening on localhost:${port}`);
 });
+
+const writeToLog = (data) => {
+  logger.write(data);
+}
 
 const generateAnswer = () => {
   return Math.round(Math.random());
