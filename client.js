@@ -8,29 +8,40 @@ const bad = 'DEC';
 
 const client = new net.Socket();
 
+let question;
+let currentIndex = -1;
+
 client.setEncoding('utf8');
 
-client.connect(port, async function() {
+client.connect(port, async () => {
   client.write(clientString);
-  client.read(res);
-  console.log(res);
-  const question = await getQuestions();
-  console.log(question);
+  question = await getQuestions();
 });
 
-client.on('data', function(data) {
-  console.log(data);
-  client.destroy();
+client.on('data', (data) => {
+  if(data === bad) client.destroy();
+  if(data === good) sendQuestion();
+  else {
+    sendQuestion();
+  }
 });
 
-client.on('close', function() {
+client.on('close', () => {
   console.log('Connection closed');
 });
 
-function getQuestions() {
+const getQuestions = () => {
   return new Promise((resolve, reject) => {
     fs.readFile('./qa.json', (err, data) => {
       resolve(JSON.parse(data));
     });
   });
+}
+
+const sendQuestion = () => {
+  if(currentIndex < question.length - 1) {
+    let qst = question[++clientIndex].quest;
+    client.write(qst);
+  } else
+    client.destroy();
 }
