@@ -18,10 +18,13 @@ const server = net.createServer((client) => {
     
     if(data === clientString) {
       client.id = Date.now() + seed++;
+      writeToLog('Client #' + client.id + ' connected\n');
       client.write(good);
-
     } else {
-      
+      writeToLog('Client #' + client.id + ' has asked: ' + data + '\n');
+      let answer = generateAnswer();
+      writeToLog('Server answered to Client #' + client.id + ': ' + answer + '\n');
+      client.write(answer.toString());
     }
 
   });
