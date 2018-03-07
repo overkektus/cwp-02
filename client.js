@@ -6,17 +6,16 @@ const clientString = 'QA';
 const good = 'ACK';
 const bad = 'DEC';
 
-let questions;
-
 const client = new net.Socket();
 
 client.setEncoding('utf8');
 
-client.connect(port, function() {
-  client.write(good);
-  fs.readFile('./qa.json', (err, data) => {
-    questions = JSON.parse(data);
-  });
+client.connect(port, async function() {
+  client.write(clientString);
+  client.read(res);
+  console.log(res);
+  const question = await getQuestions();
+  console.log(question);
 });
 
 client.on('data', function(data) {
@@ -27,3 +26,11 @@ client.on('data', function(data) {
 client.on('close', function() {
   console.log('Connection closed');
 });
+
+function getQuestions() {
+  return new Promise((resolve, reject) => {
+    fs.readFile('./qa.json', (err, data) => {
+      resolve(JSON.parse(data));
+    });
+  });
+}
